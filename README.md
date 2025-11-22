@@ -1,6 +1,24 @@
 # GhostyEncryptor
 
-Shellcode encryption and entropy reducer tool.
+```
+     .-----.
+   .' -   - '.
+  /  .-. .-.  \
+  |  | | | |  |
+   \ \o/ \o/ /
+  _/    ^    \_
+ | \  '---'  / |   ▗▄▄▖▗▖ ▗▖ ▗▄▖  ▗▄▄▖▗▄▄▄▖▗▖  ▗▖
+ / /`--. .--`\ \  ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌     █   ▝▚▞▘
+/ /'---` `---'\ \ ▐▌▝▜▌▐▛▀▜▌▐▌ ▐▌ ▝▀▚▖  █    ▐▌
+'.__.       .__.' ▝▚▄▞▘▐▌ ▐▌▝▚▄▞▘▗▄▄▞▘  █    ▐▌
+    `|     |`
+     |     \
+     \      '--.
+      '.        `\
+        `'---.   |
+           ,__) /
+            `..'
+```
 
 # Build
 
@@ -94,9 +112,9 @@ The decryptor will save the shellcode output to `test.out`
 The decryptor needs to perform the following steps:
 
 - [YEnc](https://en.wikipedia.org/wiki/YEnc) Decoding
-- [Nibble](#Nibble_Encoding) Decoding
-- RLE Decompression
-- Xor Decryption
+- [Nibble](#Nibble-Encoding) Decoding
+- [RLE](https://en.wikipedia.org/wiki/Run-length_encoding) Decompression
+- [Xor](https://en.wikipedia.org/wiki/XOR_cipher) Decryption
 
 ## Pseudocode (Python like)
 
@@ -107,9 +125,9 @@ shellcodeStep3 = RLEDecompress(shellcodeStep2)
 decrypted      = XorEncryptDecrypt(shellcodeStep3, key)
 ```
 
-# Nibble Encoding
+# How do: Nibble Encoding
 
-Nibble encoding is a method to encode the data in simple way with overhead of 1 byte = 2 bytes
+Nibble encoding is a method to encode the data in simple way with overhead of *1 byte to 2 bytes*
 
 ## Abstract
 
@@ -121,13 +139,16 @@ Nibble encoding is a method to encode the data in simple way with overhead of 1 
     H = 1111
     L = 0000
     ```
-4. Increase H by `0x40`
-5. Increase L by `0x50`
-6. Return the value as 2 bytes separated: `[H, L]`
+4. Increase H by `0x40` so `1001111b`
+5. Increase L by `0x50` so `1010000b`
+6. Return the value as 2 bytes separated: `[H, L]` so `[1001111b, 1010000b]`
 
 ### Decode
 
 1. Take bytes like: `[1001111b, 1010000b]` - The first one is the ***high***, and the second is the ***low***
-4. Decrease H by `0x40`
-5. Decrease L by `0x50`
-6. Return the recomposed byte: `((high & 0xF) << 4) | (low & 0xF)`
+4. Decrease H by `0x40` so `1111b`
+5. Decrease L by `0x50` so `0000b`
+6. Return the recomposed byte: `((high & 0xF) << 4) | (low & 0xF)` so `11110000b`
+
+> [!TODO]
+> Add "How to:" Xor encrypt, YEnc encode, RLE compress
