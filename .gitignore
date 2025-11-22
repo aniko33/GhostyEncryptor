@@ -1,4 +1,4 @@
-tests/build/
+decryptor/build/
 *.exe
 *.bin
 *.out
